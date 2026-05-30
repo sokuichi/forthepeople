@@ -1,0 +1,354 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta
+      name="description"
+      content="Atlas Bibliotheca is a 22-source book intelligence cockpit with citation-backed AI synthesis."
+    >
+    <title>Atlas Research Console</title>
+    <link rel="preconnect" href="https://openlibrary.org">
+    <link rel="preconnect" href="https://covers.openlibrary.org">
+    <link rel="preconnect" href="https://www.googleapis.com">
+    <link rel="preconnect" href="https://www.loc.gov">
+    <link rel="preconnect" href="https://www.wikidata.org">
+    <link rel="preconnect" href="https://en.wikipedia.org">
+    <link rel="stylesheet" href="styles.css?v=20260529-pro-v6">
+    <script defer src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+    <script defer src="atlas-app.js?v=20260529-pro-v6"></script>
+  </head>
+  <body>
+    <div class="workspace">
+      <header class="topbar" aria-label="Application header">
+        <a class="brand" href="/" aria-label="Atlas Research Console home">
+          <span class="brand-mark" aria-hidden="true">AR</span>
+          <span>
+            <strong>Atlas Research</strong>
+            <small>28-source book, study, and definition intelligence</small>
+          </span>
+        </a>
+
+        <div class="topbar-status" aria-label="Runtime status">
+          <span><i data-lucide="server-cog" aria-hidden="true"></i> Local backend</span>
+          <span><i data-lucide="shield-check" aria-hidden="true"></i> Safe metadata policy</span>
+        </div>
+
+        <nav class="source-strip" aria-label="Live data sources">
+          <a href="https://openlibrary.org/dev/docs/api/search" target="_blank" rel="noreferrer">Open Library</a>
+          <a href="https://developers.google.com/books/docs/v1/reference/volumes/list" target="_blank" rel="noreferrer">Google</a>
+          <a href="https://www.loc.gov/apis/json-and-yaml/" target="_blank" rel="noreferrer">LOC</a>
+          <a href="https://www.wikidata.org/wiki/Wikidata:Data_access" target="_blank" rel="noreferrer">Wikidata</a>
+          <a href="https://archive.org/advancedsearch.php" target="_blank" rel="noreferrer">Archive</a>
+          <a href="https://scholar.google.com/" target="_blank" rel="noreferrer">Scholar</a>
+          <button class="icon-button" id="clearCacheButton" type="button" aria-label="Clear cached searches">
+            <i data-lucide="trash-2" aria-hidden="true"></i>
+          </button>
+        </nav>
+      </header>
+
+      <main>
+        <section class="command-stage" aria-label="Book intelligence prompt">
+          <div class="hero-copy">
+            <div class="section-kicker">Research Intelligence Console</div>
+            <h1>Source-backed answers, parsed like a human.</h1>
+            <p>Choose a research category, write naturally, and Atlas routes the prompt through catalogs, study databases, DOI graphs, references, and safe link-outs.</p>
+            <div class="hero-metrics" aria-label="Atlas capability summary">
+              <div><strong>28</strong><span>sources</span></div>
+              <div><strong>3+</strong><span>search modes</span></div>
+              <div><strong>0</strong><span>bypass paths</span></div>
+            </div>
+          </div>
+
+          <form class="prompt-console" id="searchForm">
+            <div class="console-header">
+              <span>Research prompt</span>
+              <i data-lucide="sparkles" aria-hidden="true"></i>
+            </div>
+            <div class="category-switcher" id="categorySwitcher" role="group" aria-label="Search category">
+              <button class="category-button active" type="button" data-category="auto">
+                <i data-lucide="wand-sparkles" aria-hidden="true"></i>
+                <span>Auto</span>
+              </button>
+              <button class="category-button" type="button" data-category="books">
+                <i data-lucide="book-open" aria-hidden="true"></i>
+                <span>Books</span>
+              </button>
+              <button class="category-button" type="button" data-category="studies">
+                <i data-lucide="microscope" aria-hidden="true"></i>
+                <span>Studies</span>
+              </button>
+              <button class="category-button" type="button" data-category="definitions">
+                <i data-lucide="book-a" aria-hidden="true"></i>
+                <span>Definitions</span>
+              </button>
+              <button class="category-button" type="button" data-category="all">
+                <i data-lucide="network" aria-hidden="true"></i>
+                <span>All</span>
+              </button>
+            </div>
+            <label class="visually-hidden" for="promptInput">Book question</label>
+            <textarea
+              id="promptInput"
+              name="prompt"
+              rows="5"
+              spellcheck="true"
+              placeholder='Try: "Find systematic reviews on climate policy with DOI evidence"'
+            ></textarea>
+
+            <div class="console-footer">
+              <div class="mode-pills" aria-label="Detected modes">
+                <span class="mode-pill strong" id="intentPill">Auto</span>
+                <span class="mode-pill" id="providerPill">22 sources</span>
+              </div>
+              <button class="primary-button" id="analyzeButton" type="submit">
+                <i data-lucide="radar" aria-hidden="true"></i>
+                <span>Analyze</span>
+              </button>
+            </div>
+
+            <div class="prompt-chips" aria-label="Example prompts">
+              <button type="button" data-category="books" data-prompt="Compare Dune and Foundation for themes, publication history, and what to read first">Book compare</button>
+              <button type="button" data-category="studies" data-prompt="Find systematic reviews on climate policy with DOI evidence">Study sweep</button>
+              <button type="button" data-category="definitions" data-prompt="What does epistemology mean in philosophy?">Definition</button>
+              <button type="button" data-category="books" data-prompt="Give me a deep analysis of The Left Hand of Darkness by Ursula K. Le Guin">Deep read</button>
+              <button type="button" data-category="studies" data-prompt="DOI 10.1038/s41586-020-2649-2">DOI check</button>
+            </div>
+          </form>
+        </section>
+
+        <section class="briefing-strip" aria-label="Live briefing">
+          <article>
+            <i data-lucide="database-zap" aria-hidden="true"></i>
+            <span>Sources</span>
+            <strong id="briefingSources">0/22</strong>
+          </article>
+          <article>
+            <i data-lucide="library-big" aria-hidden="true"></i>
+            <span>Ranked records</span>
+            <strong id="briefingWorks">0</strong>
+          </article>
+          <article>
+            <i data-lucide="badge-check" aria-hidden="true"></i>
+            <span>Citations</span>
+            <strong id="briefingCitations">0</strong>
+          </article>
+          <article>
+            <i data-lucide="git-compare-arrows" aria-hidden="true"></i>
+            <span>Conflicts</span>
+            <strong id="briefingConflicts">0</strong>
+          </article>
+        </section>
+
+        <section class="source-matrix-section" aria-label="Source matrix">
+          <div class="section-heading compact">
+            <div>
+              <div class="section-kicker">Source Matrix</div>
+              <h2>28-source map</h2>
+            </div>
+            <p>Google Scholar, Anna's Archive, and Scribd are safe metadata/search link-outs. Atlas does not scrape protected pages or surface download bypasses.</p>
+          </div>
+          <div class="source-matrix" id="sourceMatrix"></div>
+        </section>
+
+        <section class="cockpit-grid" aria-label="Book intelligence workspace">
+          <aside class="left-rail" aria-label="Analysis controls">
+            <div class="rail-module">
+              <div class="module-heading">
+                <span>Analysis lens</span>
+              </div>
+              <div class="lens-switcher" id="lensSwitcher" role="group" aria-label="Analysis lens">
+                <button class="lens-button active" type="button" data-lens="overview">
+                  <i data-lucide="scan-search" aria-hidden="true"></i>
+                  <span>Overview</span>
+                </button>
+                <button class="lens-button" type="button" data-lens="evidence">
+                  <i data-lucide="badge-check" aria-hidden="true"></i>
+                  <span>Evidence</span>
+                </button>
+                <button class="lens-button" type="button" data-lens="themes">
+                  <i data-lucide="network" aria-hidden="true"></i>
+                  <span>Themes</span>
+                </button>
+                <button class="lens-button" type="button" data-lens="reader">
+                  <i data-lucide="route" aria-hidden="true"></i>
+                  <span>Reader path</span>
+                </button>
+                <button class="lens-button" type="button" data-lens="conflicts">
+                  <i data-lucide="git-compare-arrows" aria-hidden="true"></i>
+                  <span>Conflicts</span>
+                </button>
+                <button class="lens-button" type="button" data-lens="brain">
+                  <i data-lucide="brain-circuit" aria-hidden="true"></i>
+                  <span>AI brain</span>
+                </button>
+              </div>
+            </div>
+
+            <div class="rail-module">
+              <div class="module-heading">
+                <span>Telemetry</span>
+              </div>
+              <div class="metric-stack">
+                <div>
+                  <span id="coverageMetric">0</span>
+                  <small>ranked records</small>
+                </div>
+                <div>
+                  <span id="latencyMetric">0 ms</span>
+                  <small>last response</small>
+                </div>
+                <div>
+                  <span id="sourceMetric">0/22</span>
+                  <small>sources online</small>
+                </div>
+                <div>
+                  <span id="conflictMetric">0</span>
+                  <small>conflicts</small>
+                </div>
+                <div>
+                  <span id="aiMetric">idle</span>
+                  <small>AI mode</small>
+                </div>
+              </div>
+            </div>
+
+            <div class="rail-module">
+              <div class="module-heading">
+                <span>Query scanner</span>
+                <button class="icon-button small" id="copyQueryButton" type="button" aria-label="Copy analysis payload">
+                  <i data-lucide="copy" aria-hidden="true"></i>
+                </button>
+              </div>
+              <dl class="inspector-list" id="inspectorList">
+                <div>
+                  <dt>Intent</dt>
+                  <dd>Waiting</dd>
+                </div>
+                <div>
+                  <dt>Search terms</dt>
+                  <dd>None yet</dd>
+                </div>
+              </dl>
+            </div>
+          </aside>
+
+          <section class="analysis-stream" aria-live="polite">
+            <section class="spotlight-panel" id="spotlightPanel" aria-label="Top match spotlight">
+              <div class="spotlight-empty">
+                <i data-lucide="scan-eye" aria-hidden="true"></i>
+                <span>Top result waits for evidence</span>
+              </div>
+            </section>
+
+            <div class="answer-panel" id="answerPanel">
+              <div class="empty-state">
+                <i data-lucide="book-open-check" aria-hidden="true"></i>
+                <h2>Ask a research question.</h2>
+                <p>Atlas will classify the prompt, plan category-specific searches, fuse source evidence, and return a citation-backed answer.</p>
+              </div>
+            </div>
+
+            <div class="intel-grid">
+              <section class="graph-panel" aria-label="Relationship map">
+                <div class="panel-title">
+                  <span>Evidence map</span>
+                  <small id="graphCaption">Waiting for evidence</small>
+                </div>
+                <div class="constellation" id="graphPanel"></div>
+              </section>
+
+              <section class="evidence-panel" aria-label="Evidence board">
+                <div class="panel-title">
+                  <span>Evidence board</span>
+                  <small>citations, status, conflicts</small>
+                </div>
+                <div class="evidence-list" id="evidencePanel"></div>
+              </section>
+            </div>
+          </section>
+
+          <aside class="right-rail" aria-label="Source health">
+            <div class="source-orbit" aria-hidden="true">
+              <span></span><span></span><span></span><span></span>
+              <b>22</b>
+            </div>
+            <div class="rail-module mini-legend">
+              <div class="module-heading">
+                <span>Status legend</span>
+              </div>
+              <div class="legend-list">
+                <span><b class="dot ok"></b>online</span>
+                <span><b class="dot partial"></b>partial</span>
+                <span><b class="dot fail"></b>unavailable</span>
+                <span><b class="dot muted"></b>configured later</span>
+              </div>
+            </div>
+            <div class="source-health" id="sourceHealth">
+              <div class="health-row"><span>Loading sources</span><b>idle</b></div>
+            </div>
+          </aside>
+        </section>
+
+        <section class="results-section" aria-label="Book results">
+          <div class="section-heading">
+            <div>
+              <div class="section-kicker">Ranked Records</div>
+              <h2>Books, editions, candidates</h2>
+            </div>
+            <div class="toolbar" aria-label="Result controls">
+              <label>
+                <span>Sort</span>
+                <select id="sortSelect">
+                  <option value="confidence">Confidence</option>
+                  <option value="year-desc">Newest</option>
+                  <option value="year-asc">Oldest</option>
+                  <option value="sources">Source count</option>
+                </select>
+              </label>
+              <label class="toggle">
+                <input id="showOnlyCited" type="checkbox">
+                <span>multi-source</span>
+              </label>
+            </div>
+          </div>
+          <div class="result-grid" id="resultGrid"></div>
+        </section>
+      </main>
+    </div>
+
+    <aside class="detail-drawer" id="detailDrawer" aria-hidden="true" aria-label="Book detail drawer">
+      <div class="drawer-panel">
+        <button class="icon-button" id="closeDetailButton" type="button" aria-label="Close detail drawer">
+          <i data-lucide="x" aria-hidden="true"></i>
+        </button>
+        <div id="detailContent"></div>
+      </div>
+    </aside>
+
+    <template id="bookCardTemplate">
+      <article class="book-card">
+        <div class="rank-stamp"></div>
+        <div class="cover-wrap">
+          <img class="book-cover" alt="">
+        </div>
+        <div class="book-copy">
+          <div class="card-meta">
+            <span class="confidence-badge"></span>
+            <span class="source-badge"></span>
+          </div>
+          <h3></h3>
+          <p class="byline"></p>
+          <p class="description"></p>
+          <div class="fact-grid"></div>
+          <div class="subject-row"></div>
+          <div class="card-actions"></div>
+          <button class="detail-button" type="button">
+            <i data-lucide="panel-right-open" aria-hidden="true"></i>
+            <span>Inspect</span>
+          </button>
+        </div>
+      </article>
+    </template>
+  </body>
+</html>
