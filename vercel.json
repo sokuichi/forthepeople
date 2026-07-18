@@ -1,0 +1,16 @@
+{
+  "version": 2,
+  "builds": [
+    { "src": "server.js",    "use": "@vercel/node"   },
+    { "src": "index.html",   "use": "@vercel/static" },
+    { "src": "styles.css",   "use": "@vercel/static" },
+    { "src": "atlas-app.js", "use": "@vercel/static" }
+  ],
+  "routes": [
+    { "src": "/api/(.*)",    "dest": "/server.js"    },
+    { "src": "/styles.css",  "dest": "/styles.css"   },
+    { "src": "/atlas-app.js","dest": "/atlas-app.js" },
+    { "src": "/",            "dest": "/index.html"   },
+    { "src": "/(.*)",        "dest": "/server.js"    }
+  ]
+}
