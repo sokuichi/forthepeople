@@ -11,11 +11,6 @@ npm start
 
 Open `http://localhost:4173`.
 
-## Keep Localhost Running After Restart
-
-Atlas includes a Windows launcher at `scripts/start-atlas-localhost.ps1`. The launcher checks port `4173`, starts `node server.js` only when needed, writes launcher events to `atlas-launcher.log`, and writes server output to `atlas-server.out.log` and `atlas-server.err.log`.
-
-The current machine is configured with a current-user Startup shortcut named `Atlas Bibliotheca Localhost.lnk`, so the local server starts again after Windows sign-in without admin rights.
 
 ## Sources
 
