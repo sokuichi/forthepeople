@@ -10,7 +10,7 @@
     "smoke:browser": "node scripts/browser-smoke.js"
   },
   "dependencies": {
-    "dotenv": "^16.4.7",
+    "dotenv": "^18.0.7",
     "express": "^4.21.2"
   },
   "devDependencies": {
